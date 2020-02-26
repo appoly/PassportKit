@@ -81,12 +81,7 @@
 		6834A2B32406C0A600359631 /* PassportKit */ = {
 			isa = PBXGroup;
 			children = (
-				6834A2C42406C0D000359631 /* Authentication */,
-				6834A2CB2406C0D100359631 /* Controllers */,
-				6834A2C72406C0D100359631 /* Extensions */,
-				6834A2BC2406C0D000359631 /* NetworkController */,
-				6834A2C12406C0D000359631 /* Resources */,
-				6834A2C92406C0D100359631 /* View Models */,
+				6834A2D92406DD8900359631 /* Source */,
 				6834A2B42406C0A600359631 /* PassportKit.h */,
 				6834A2B52406C0A600359631 /* Info.plist */,
 			);
@@ -161,13 +156,25 @@
 			path = "Custom Components";
 			sourceTree = "<group>";
 		};
+		6834A2D92406DD8900359631 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				6834A2C42406C0D000359631 /* Authentication */,
+				6834A2CB2406C0D100359631 /* Controllers */,
+				6834A2C72406C0D100359631 /* Extensions */,
+				6834A2BC2406C0D000359631 /* NetworkController */,
+				6834A2C12406C0D000359631 /* Resources */,
+				6834A2C92406C0D100359631 /* View Models */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		EF704E32F5A3FB18F7859D6A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
 				852B6AAD994639E45643E4E0 /* Pods-PassportKit.debug.xcconfig */,
 				7DFDB20C9DDEB09D1552D10E /* Pods-PassportKit.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
