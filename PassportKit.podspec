@@ -12,7 +12,6 @@ Pod::Spec.new do |spec|
   spec.dependency 'Alamofire', '~> 4.9.0'
   spec.swift_version = "5.0"
   spec.authors = "James Wolfe"
-  spec.static_framework = true
   spec.source = { :git => 'https://github.com/appoly/PassportKit.git', :tag => spec.version }
 
 end
