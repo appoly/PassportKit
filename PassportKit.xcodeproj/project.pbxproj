@@ -88,83 +88,19 @@
 			path = PassportKit;
 			sourceTree = "<group>";
 		};
-		6834A2BC2406C0D000359631 /* NetworkController */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2BD2406C0D000359631 /* Shared */,
-				6834A2C02406C0D000359631 /* AuthNetworkController.swift */,
-			);
-			path = NetworkController;
-			sourceTree = "<group>";
-		};
-		6834A2BD2406C0D000359631 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2BE2406C0D000359631 /* NetworkErrors.swift */,
-				6834A2BF2406C0D000359631 /* HTTPStatusCodes.swift */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		6834A2C12406C0D000359631 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2C22406C0D000359631 /* Localizable.strings */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		6834A2C42406C0D000359631 /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2C52406C0D000359631 /* AuthenticationManager.swift */,
-				6834A2C62406C0D000359631 /* AuthenticationToken.swift */,
-			);
-			path = Authentication;
-			sourceTree = "<group>";
-		};
-		6834A2C72406C0D100359631 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2C82406C0D100359631 /* String+Extension.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		6834A2C92406C0D100359631 /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2CA2406C0D100359631 /* PassportViewModel.swift */,
-			);
-			path = "View Models";
-			sourceTree = "<group>";
-		};
-		6834A2CB2406C0D100359631 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2CC2406C0D100359631 /* PassportKit.swift */,
-				6834A2CD2406C0D100359631 /* Custom Components */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		6834A2CD2406C0D100359631 /* Custom Components */ = {
-			isa = PBXGroup;
-			children = (
-				6834A2CE2406C0D100359631 /* LaravelDateFormatter.swift */,
-			);
-			path = "Custom Components";
-			sourceTree = "<group>";
-		};
 		6834A2D92406DD8900359631 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				6834A2C42406C0D000359631 /* Authentication */,
-				6834A2CB2406C0D100359631 /* Controllers */,
-				6834A2C72406C0D100359631 /* Extensions */,
-				6834A2BC2406C0D000359631 /* NetworkController */,
-				6834A2C12406C0D000359631 /* Resources */,
-				6834A2C92406C0D100359631 /* View Models */,
+				6834A2CA2406C0D100359631 /* PassportViewModel.swift */,
+				6834A2C52406C0D000359631 /* AuthenticationManager.swift */,
+				6834A2C62406C0D000359631 /* AuthenticationToken.swift */,
+				6834A2CC2406C0D100359631 /* PassportKit.swift */,
+				6834A2CE2406C0D100359631 /* LaravelDateFormatter.swift */,
+				6834A2C82406C0D100359631 /* String+Extension.swift */,
+				6834A2BE2406C0D000359631 /* NetworkErrors.swift */,
+				6834A2BF2406C0D000359631 /* HTTPStatusCodes.swift */,
+				6834A2C02406C0D000359631 /* AuthNetworkController.swift */,
+				6834A2C22406C0D000359631 /* Localizable.strings */,
 			);
 			path = Source;
 			sourceTree = "<group>";

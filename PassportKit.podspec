@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "PassportKit"
-  spec.version      = "0.9.3"
+  spec.version      = "0.9.4"
   spec.summary      = "Swift library used for quick and easy oauth authentication."
   spec.homepage     = "https://github.com/appoly/PassportKit"
   spec.license      = "MIT"
@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.dependency 'Alamofire', '~> 4.9.0'
   spec.swift_version = "5.0"
   spec.authors = "James Wolfe"
-  spec.source_files = 'PassportKit/Source/**/*.swift'
+  spec.source_files = 'PassportKit/Source/*'
   spec.source = { :git => 'https://github.com/appoly/PassportKit.git', :tag => spec.version }
 
 end
