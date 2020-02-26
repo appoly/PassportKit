@@ -1,5 +1,10 @@
 # PassportKit
  Swift library used for quick and easy oauth authentication.
+ 
+**Installing with cocoapods**
+```
+pod 'PassportKit', '~> 0.1'
+```
 
 **Quick start**
 
