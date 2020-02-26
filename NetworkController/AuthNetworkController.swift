@@ -16,11 +16,6 @@ import CoreLocation
 
 class AuthNetworkController {
     
-    /// Get auth token from the api & store it in the keychain
-    /// - Parameters:
-    ///   - email: Email address for the user account
-    ///   - password: Password for user account
-    ///   - completion: Code to be ran when login attempt is complete (Success, Error)
     public func login(configuration: PassportConfiguration, model: PassportViewModel, completion: @escaping (Bool, NetworkError?) -> ()) -> Void {
         
         guard isNetworkAvailable() else {
@@ -31,8 +26,8 @@ class AuthNetworkController {
         let parameters: Parameters = [
             "username" : model.email!,
             "password" : model.password!,
-            "client_id" : configuration.clientID!,
-            "client_secret" : configuration.clientSecret!,
+            "client_id" : configuration.clientID,
+            "client_secret" : configuration.clientSecret,
             "grant_type" : "password"
         ]
         

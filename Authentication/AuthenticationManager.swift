@@ -51,13 +51,8 @@ class AuthenticationManager: NSObject {
     }
 
     
-    private func removeAuthToken() {
+    public func removeAuthToken() {
         let valet = Valet.valet(with: identifier, accessibility: .alwaysThisDeviceOnly)
         valet.removeObject(forKey: authTokenKey)
-    }
-    
-    
-    public func logout() {
-        removeAuthToken()
     }
 }
