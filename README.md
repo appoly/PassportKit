@@ -3,7 +3,7 @@
  
 **Installing with cocoapods**
 ```
-pod 'PassportKit', '~> 0.1'
+pod 'PassportKit', '~> 0.9'
 ```
 
 **Quick start**
@@ -37,7 +37,7 @@ func failed(_ error: String) {
 }
 
 func success() {
-    print("Token: \(AuthenticationManager("PassportTest").getAuthToken()!)")
+    print("Token: \(passport.getAuthToken()!)")
 }
 ```
 
