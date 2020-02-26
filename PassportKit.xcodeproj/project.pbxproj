@@ -18,6 +18,7 @@
 		6834A2D62406C0D100359631 /* PassportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6834A2CA2406C0D100359631 /* PassportViewModel.swift */; };
 		6834A2D72406C0D100359631 /* PassportKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6834A2CC2406C0D100359631 /* PassportKit.swift */; };
 		6834A2D82406C0D100359631 /* LaravelDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6834A2CE2406C0D100359631 /* LaravelDateFormatter.swift */; };
+		6834A2DA2406E3A000359631 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6834A2B52406C0A600359631 /* Info.plist */; };
 		A72E191CD6EDA0A4D2F2DBDE /* Pods_PassportKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98EB002BD1E07FD3FEDD3E77 /* Pods_PassportKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -184,6 +185,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6834A2DA2406E3A000359631 /* Info.plist in Resources */,
 				6834A2D22406C0D100359631 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
