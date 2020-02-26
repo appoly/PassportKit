@@ -82,8 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				6834A2D92406DD8900359631 /* Source */,
-				6834A2B42406C0A600359631 /* PassportKit.h */,
-				6834A2B52406C0A600359631 /* Info.plist */,
 			);
 			path = PassportKit;
 			sourceTree = "<group>";
@@ -101,6 +99,8 @@
 				6834A2BF2406C0D000359631 /* HTTPStatusCodes.swift */,
 				6834A2C02406C0D000359631 /* AuthNetworkController.swift */,
 				6834A2C22406C0D000359631 /* Localizable.strings */,
+				6834A2B42406C0A600359631 /* PassportKit.h */,
+				6834A2B52406C0A600359631 /* Info.plist */,
 			);
 			path = Source;
 			sourceTree = "<group>";
