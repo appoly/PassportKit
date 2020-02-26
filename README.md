@@ -37,7 +37,7 @@ func failed(_ error: String) {
 }
 
 func success() {
-    print("Token: \(AuthenticationManager("PassportTest").getAuthToken()!)")
+    print("Token: \(passport.getAuthToken()!)")
 }
 ```
 
