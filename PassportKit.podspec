@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "PassportKit"
   spec.version      = "0.1"
-  spec.summary      = "Swift library used for quick and easy authentication using Laravel passport."
+  spec.summary      = "Swift library used for quick and easy oauth authentication."
   spec.homepage     = "https://github.com/appoly/PassportKit"
   spec.license      = "MIT"
   spec.platform     = :ios, "11.4"
