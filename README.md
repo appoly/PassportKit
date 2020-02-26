@@ -1,5 +1,5 @@
 # PassportKit
- Swift library used for quick and easy authentication using laravel passport.
+ Swift library used for quick and easy oauth authentication.
 
 **Quick start**
 
