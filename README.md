@@ -23,6 +23,8 @@ func setupViewModel() -> PassportViewModel {
     let model = PassportViewModel(delegate: self)
     model.setEmail(string: "test@test.com")
     model.setPassword(string: "secret123")
+    
+    return model
 }
 ```
 
