@@ -39,7 +39,8 @@ func failed(_ error: String) {
 }
 
 func success() {
-    print("Token: \(passport?.getAuthToken()!)")
+    guard let token = passport?.getAuthToken() else { return }
+    print("Token: \(token)")
 }
 ```
 
