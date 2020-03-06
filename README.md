@@ -11,9 +11,9 @@ pod 'PassportKit', '~> 0.9'
 First start by creating a PassportConfiguration, this will give the request all the parameters it needs outside of the email and password. 
 ```
 func setupPassport() -> PassportKit? {
-        guard let baseURL = URL(string: "https://google.com") else { return nil }
-        let configuration = PassportConfiguration(baseURL: baseURL, clientID: "1", clientSecret: "awdoncoin12onaoinaoinda9", keychainID: "PassportTest")
-        return PassportKit(configuration, delegate: self)
+    guard let baseURL = URL(string: "https://google.com") else { return nil }
+    let configuration = PassportConfiguration(baseURL: baseURL, clientID: "1", clientSecret: "awdoncoin12onaoinaoinda9", keychainID: "PassportTest")
+    return PassportKit(configuration, delegate: self)
 }
 ```
 
