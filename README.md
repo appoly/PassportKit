@@ -10,8 +10,8 @@ pod 'PassportKit', '~> 0.9'
 
 First start by creating a PassportConfiguration, this will give the request all the parameters it needs outside of the email and password. 
 ```
-func setupPassport() -> PassportKit {
-    guard let baseURL = URL(string: "https://google.com") else { return }
+func setupPassport() -> PassportKit? {
+    guard let baseURL = URL(string: "https://google.com") else { return nil }
     let configuration = PassportConfiguration(baseURL: baseURL, clientID: "1", clientSecret: "awdoncoin12onaoinaoinda9", keychainID: "PassportTest")
     return PassportKit(configuration, delegate: self)
 }
@@ -20,9 +20,11 @@ func setupPassport() -> PassportKit {
 Then you will need to setup a view model to pass to the authentication function, this view model consists of an email and a password. The values can be set using a string or a textfield as an argument.
 ```
 func setupViewModel() -> PassportViewModel {
-    let model = PassportViewModel(self)
+    let model = PassportViewModel(delegate: self)
     model.setEmail(string: "test@test.com")
     model.setPassword(string: "secret123")
+    
+    return model
 }
 ```
 
@@ -37,7 +39,8 @@ func failed(_ error: String) {
 }
 
 func success() {
-    print("Token: \(passport.getAuthToken()!)")
+    guard let token = passport?.getAuthToken() else { return }
+    print("Token: \(token)")
 }
 ```
 
