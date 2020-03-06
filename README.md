@@ -3,7 +3,7 @@
  
 **Installing with cocoapods**
 ```
-pod 'PassportKit', '~> 1.0'
+pod 'PassportKit'
 ```
 
 **Quick start**
