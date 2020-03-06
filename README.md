@@ -8,7 +8,7 @@ pod 'PassportKit'
 
 
 **Installing with Swift Package Manager**
-`File->Swift Packages->Add Package Dependency`
+ - Navigate to `File->Swift Packages->Add Package Dependency`
  - Select your target, then search PassportKit.
  - Set the version to 1.1 (if it isn't already)
  - Click next to install
