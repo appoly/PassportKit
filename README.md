@@ -1,10 +1,17 @@
 # PassportKit
  Swift library used for quick and easy oauth authentication.
  
-**Installing with cocoapods**
+**Installing with Cocoapods**
 ```
 pod 'PassportKit'
 ```
+
+
+**Installing with Swift Package Manager**
+`File->Swift Packages->Add Package Dependency`
+ - Select your target, then search PassportKit.
+ - Set the version to 1.1 (if it isn't already)
+ - Click next to install
 
 **Quick start**
 
