@@ -12,15 +12,23 @@ import Foundation
 
 
 public struct PassportConfiguration {
+    
     let baseURL: URL
     let clientID: String
     let clientSecret: String
     let keychainID: String
+    
+    public init(baseURL: URL, clientID: String, clientSecret: String, keychainID: String) {
+        self.baseURL = baseURL
+        self.clientID = clientID
+        self.clientSecret = clientSecret
+        self.keychainID = keychainID
+    }
 }
 
 
 
-class PassportKit: NSObject {
+public class PassportKit: NSObject {
     
     // MARK: - Variables
     
@@ -32,7 +40,7 @@ class PassportKit: NSObject {
     
     // MARK: - Initializers
     
-    init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate) {
+    public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.authManager = AuthenticationManager(configuration.keychainID)

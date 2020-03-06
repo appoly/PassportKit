@@ -13,14 +13,14 @@ import UIKit
 
 
 
-protocol PassportViewDelegate {
+public protocol PassportViewDelegate {
     func failed(_ error: String)
     func success()
 }
 
 
 
-class PassportViewModel: NSObject {
+public class PassportViewModel: NSObject {
     
     // MARK: - Variables
     
@@ -33,7 +33,7 @@ class PassportViewModel: NSObject {
 
     // MARK: - Initializers
     
-    init(_ delegate: PassportViewDelegate) {
+    public init(delegate: PassportViewDelegate) {
         self.delegate = delegate
         super.init()
     }
