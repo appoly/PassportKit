@@ -33,14 +33,14 @@ public class PassportKit: NSObject {
     // MARK: - Variables
     
     private let configuration: PassportConfiguration!
-    private let delegate: PassportViewDelegate!
+    private let delegate: PassportViewDelegate?
     private let authManager: AuthenticationManager!
     
     
     
     // MARK: - Initializers
     
-    public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate) {
+    public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate?) {
         self.configuration = configuration
         self.delegate = delegate
         self.authManager = AuthenticationManager(configuration.keychainID)
@@ -57,9 +57,9 @@ public class PassportKit: NSObject {
         if(viewModel.validateForLogin()) {
             AuthNetworkController().login(configuration: configuration, model: viewModel) { [weak self] (success, error) in
                 if(success) {
-                    self?.delegate.success()
+                    self?.delegate?.success()
                 } else {
-                    self?.delegate.failed(error?.localizedDescription ?? NetworkError.unknown.localizedDescription)
+                    self?.delegate?.failed(error?.localizedDescription ?? NetworkError.unknown.localizedDescription)
                 }
             }
         }
