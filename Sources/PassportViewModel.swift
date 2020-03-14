@@ -26,14 +26,14 @@ public class PassportViewModel: NSObject {
     
     private(set) var email: String?
     private(set) var password: String?
-    private let delegate: PassportViewDelegate!
+    private let delegate: PassportViewDelegate?
     private let authController = AuthNetworkController()
     
     
 
     // MARK: - Initializers
     
-    public init(delegate: PassportViewDelegate) {
+    public init(delegate: PassportViewDelegate?) {
         self.delegate = delegate
         super.init()
     }
@@ -73,18 +73,18 @@ public class PassportViewModel: NSObject {
         
         
         if(email.isEmpty) {
-            delegate.failed(NSLocalizedString("Please enter your email", comment: ""))
+            delegate?.failed(NSLocalizedString("Please enter your email", comment: ""))
             return false
         }
         
         if(!email.isValidEmail()) {
-            delegate.failed(NSLocalizedString("Please enter a valid email", comment: ""))
+            delegate?.failed(NSLocalizedString("Please enter a valid email", comment: ""))
             return false
         }
         
         
         if(password.isEmpty) {
-            delegate.failed(NSLocalizedString("Please enter your password", comment: ""))
+            delegate?.failed(NSLocalizedString("Please enter your password", comment: ""))
             return false
         }
         
