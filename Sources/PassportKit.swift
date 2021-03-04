@@ -32,19 +32,34 @@ public class PassportKit: NSObject {
     
     // MARK: - Variables
     
-    private let configuration: PassportConfiguration!
-    private let delegate: PassportViewDelegate?
-    private let authManager: AuthenticationManager!
+    private var configuration: PassportConfiguration!
+    private var delegate: PassportViewDelegate?
+    private var authManager: AuthenticationManager!
+    private static var passportKit: PassportKit?
+    
+    public class var shared: PassportKit {
+        get {
+            passportKit = passportKit == nil ? PassportKit() : passportKit
+            return passportKit!
+        }
+    }
     
     
     
     // MARK: - Initializers
     
-    public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate?) {
+    private override init() {
+        super.init()
+    }
+    
+    
+    
+    // MARK: - Setup
+    
+    public func setup(_ configuration: PassportConfiguration, delegate: PassportViewDelegate?) {
         self.configuration = configuration
         self.delegate = delegate
         self.authManager = AuthenticationManager(configuration.keychainID)
-        super.init()
     }
     
     
