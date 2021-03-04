@@ -79,7 +79,7 @@ public class PassportKit: NSObject {
     
     
     /// Manually sets auth token
-    public func setAuthToken(configuration: PassportConfiguration, token: String) {
+    public func setAuthToken(token: String) {
         AuthenticationManager(configuration.keychainID).setAuthToken(AuthenticationToken(accessToken: token))
     }
 
