@@ -11,20 +11,10 @@ import Foundation
 
 
 
-public struct PassportConfiguration {
-    
-    let baseURL: URL
-    let clientID: String
-    let clientSecret: String
-    let keychainID: String
-    
-    public init(baseURL: URL, clientID: String, clientSecret: String, keychainID: String) {
-        self.baseURL = baseURL
-        self.clientID = clientID
-        self.clientSecret = clientSecret
-        self.keychainID = keychainID
-    }
-}
+
+public typealias PassportKitValidationResponse = (Error?) -> Void
+public typealias PassportKitAuthenticationResponse = (Error?) -> ()
+public typealias PassportKitRefreshResponse = (Error?) -> ()
 
 
 
@@ -34,7 +24,16 @@ public class PassportKit: NSObject {
     
     private let configuration: PassportConfiguration!
     private let delegate: PassportViewDelegate?
-    private let authManager: AuthenticationManager!
+    private let authManager: PassportKitAuthenticationManager!
+    private let authService = PassportKitAuthService()
+
+    public var isAuthenticated: Bool {
+        return authManager.isAuthenticated
+    }
+    
+    public var authToken: String? {
+        return authManager.authToken
+    }
     
     
     
@@ -43,7 +42,7 @@ public class PassportKit: NSObject {
     public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate?) {
         self.configuration = configuration
         self.delegate = delegate
-        self.authManager = AuthenticationManager(configuration.keychainID)
+        self.authManager = PassportKitAuthenticationManager(configuration.keychainID)
         super.init()
     }
     
@@ -53,40 +52,40 @@ public class PassportKit: NSObject {
     
     /// Uses the given configuration to get a users authentication token and store it in the keychain
     /// - Parameter viewModel: View model consisting of a email and a password
-    public func authenticate(_ viewModel: PassportViewModel) {
-        if(viewModel.validateForLogin()) {
-            AuthNetworkController().login(configuration: configuration, model: viewModel) { [weak self] (success, error) in
-                if(success) {
-                    self?.delegate?.success()
+    public func authenticate(_ viewModel: PassportViewModel, completion: PassportKitAuthenticationResponse?) {
+        viewModel.validateForLogin { [weak self] error in
+            guard let self = self else { return }
+            guard error == nil else {
+                DispatchQueue.main.async { completion?(error!) }
+                return
+            }
+            
+            self.authService.login(configuration: self.configuration, model: viewModel) { error in
+                if(error == nil) {
+                    DispatchQueue.main.async { completion?(nil) }
                 } else {
-                    self?.delegate?.failed(error?.localizedDescription ?? NetworkError.unknown.localizedDescription)
+                    DispatchQueue.main.async { completion?(error!) }
                 }
             }
         }
     }
     
-    
-    /// Returns a boolean indicating whether a usr is authenticated or not
-    public func isAuthenticated() -> Bool {
-        return authManager.isAuthenticated()
-    }
-
-    
-    /// Gets the user's auth token from the keychain, if it is available
-    public func getAuthToken() -> String? {
-        return authManager.getAuthToken()
+    /// Refrshes the user's auth token using given configuration
+    /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
+    public func refresh(biometricsEnabled: Bool, completion: PassportKitRefreshResponse) {
+        
     }
     
     
     /// Manually sets auth token
-    public func setAuthToken(configuration: PassportConfiguration, token: String) {
-        AuthenticationManager(configuration.keychainID).setAuthToken(AuthenticationToken(accessToken: token))
+    public func setAuthToken(token: String) {
+        PassportKitAuthenticationManager(configuration.keychainID).setAuthToken(token)
     }
 
     
     /// Removes the users auth token from the keychain
     public func unauthenticate() {
-        authManager.removeAuthToken()
+        authManager.setAuthToken(nil)
     }
     
 }

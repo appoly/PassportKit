@@ -26,15 +26,17 @@ public class PassportViewModel: NSObject {
     
     private(set) var email: String?
     private(set) var password: String?
+    private let passwordRegex: String?
     private let delegate: PassportViewDelegate?
-    private let authController = AuthNetworkController()
+    private let authController = PassportKitAuthService()
     
     
 
     // MARK: - Initializers
     
-    public init(delegate: PassportViewDelegate?) {
+    public init(delegate: PassportViewDelegate?, passwordRegex: String? = nil) {
         self.delegate = delegate
+        self.passwordRegex = passwordRegex
         super.init()
     }
     
@@ -66,29 +68,35 @@ public class PassportViewModel: NSObject {
     
     // MARK: - Validators
     
-    public func validateForLogin() -> Bool {
+    public func validateForLogin(completion: @escaping PassportKitValidationResponse) {
         
         let email = self.email ?? ""
         let password = self.password ?? ""
         
-        
-        if(email.isEmpty) {
-            delegate?.failed(NSLocalizedString("Please enter your email", comment: ""))
-            return false
+        guard !email.isEmpty else {
+            DispatchQueue.main.async { completion(PassportKitValidationError.missingEmail) }
+            return
         }
         
-        if(!email.isValidEmail()) {
-            delegate?.failed(NSLocalizedString("Please enter a valid email", comment: ""))
-            return false
+        guard email.isValidEmail else {
+            DispatchQueue.main.async { completion(PassportKitValidationError.invalidEmail) }
+            return
         }
         
-        
-        if(password.isEmpty) {
-            delegate?.failed(NSLocalizedString("Please enter your password", comment: ""))
-            return false
+        guard !password.isEmpty else {
+            DispatchQueue.main.async { completion(PassportKitValidationError.missingPassword) }
+            return
         }
         
-        return true
+        if let passwordRegex = passwordRegex {
+            let passwordPredicate = NSPredicate(format:"SELF MATCHES %@", passwordRegex)
+            guard passwordPredicate.evaluate(with: password) else {
+                completion(PassportKitValidationError.invalidPassword)
+                return
+            }
+        }
+        
+        DispatchQueue.main.async { completion(nil) }
     }
     
 }

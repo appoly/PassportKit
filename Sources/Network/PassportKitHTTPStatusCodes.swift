@@ -1,5 +1,5 @@
 //
-//  HTTPStatusCodes.swift
+//  PassportKitHTTPStatusCodes.swift
 //  PassportKit
 //
 //  Created by James Wolfe on 25/02/2020.
@@ -11,7 +11,7 @@
 import Foundation
 
 
-enum HTTPStatusCode: Int {
+enum PassportKitHTTPStatusCode: Int {
     
     // MARK: - 100 Informational
     case `continue` = 100

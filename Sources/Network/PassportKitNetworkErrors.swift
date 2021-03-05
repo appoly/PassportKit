@@ -1,5 +1,5 @@
 //
-//  NetworkErrors.swift
+//  PassportKitNetworkErrors.swift
 //  PassportKit
 //
 //  Created by James Wolfe on 25/02/2020.
@@ -12,7 +12,7 @@ import Foundation
 
 
 
-enum NetworkError: Error {
+enum PassportKitNetworkError: Error {
     case unknown
     case noConnection
     case noHost
@@ -29,7 +29,7 @@ enum NetworkError: Error {
 
 
 
-extension NetworkError: LocalizedError {
+extension PassportKitNetworkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
             case .noConnection:
