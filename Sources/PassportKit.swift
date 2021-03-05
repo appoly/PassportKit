@@ -103,7 +103,9 @@ public class PassportKit: NSObject {
                 }
             }
         } else {
-            
+            self.authService.refresh(configuration: self.configuration, completion: { error in
+                completion(error)
+            })
         }
     }
     
