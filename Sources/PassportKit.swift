@@ -34,10 +34,17 @@ public class PassportKit: NSObject {
     
     // MARK: - Variables
     
-    private let configuration: PassportConfiguration!
-    private let delegate: PassportViewDelegate?
-    private let authManager: PassportKitAuthenticationManager!
+    private var configuration: PassportConfiguration!
+    private var authManager: PassportKitAuthenticationManager!
     private let authService = PassportKitAuthService()
+    
+    private static var passportKit: PassportKit?
+    public class var shared: PassportKit {
+        get {
+            passportKit = passportKit == nil ? PassportKit() : passportKit
+            return passportKit!
+        }
+    }
 
     public var isAuthenticated: Bool {
         return authManager.isAuthenticated
@@ -49,13 +56,11 @@ public class PassportKit: NSObject {
     
     
     
-    // MARK: - Initializers
+    // MARK: - Setup
     
-    public init(_ configuration: PassportConfiguration, delegate: PassportViewDelegate?) {
+    public func setup(_ configuration: PassportConfiguration) {
         self.configuration = configuration
-        self.delegate = delegate
         self.authManager = PassportKitAuthenticationManager(configuration.keychainID)
-        super.init()
     }
     
     

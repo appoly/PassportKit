@@ -13,13 +13,6 @@ import UIKit
 
 
 
-public protocol PassportViewDelegate {
-    func failed(_ error: String)
-    func success()
-}
-
-
-
 public class PassportViewModel: NSObject {
     
     // MARK: - Variables
@@ -27,15 +20,13 @@ public class PassportViewModel: NSObject {
     private(set) var email: String?
     private(set) var password: String?
     private let passwordRegex: String?
-    private let delegate: PassportViewDelegate?
     private let authController = PassportKitAuthService()
     
     
 
     // MARK: - Initializers
     
-    public init(delegate: PassportViewDelegate?, passwordRegex: String? = nil) {
-        self.delegate = delegate
+    public init(passwordRegex: String? = nil) {
         self.passwordRegex = passwordRegex
         super.init()
     }
