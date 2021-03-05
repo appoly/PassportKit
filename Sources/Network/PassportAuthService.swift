@@ -26,7 +26,28 @@ class PassportKitAuthService {
         }
         
         let api: PassportAuthAPI = .login(configuration: configuration, model: model)
+        authRequest(configuration: configuration, api: api, completion: completion)
+    }
+    
+    
+    public func refresh(configuration: PassportConfiguration, completion: @escaping PassportKitRefreshResponse) {
         
+        guard isNetworkAvailable() else {
+            completion(PassportKitNetworkError.noConnection)
+            return
+        }
+        
+        let manager = PassportKitAuthenticationManager(configuration.keychainID)
+        if let refreshToken = manager.refreshToken {
+            let api: PassportAuthAPI = .refresh(configuration: configuration, token: refreshToken)
+            authRequest(configuration: configuration, api: api, completion: completion)
+        } else {
+            completion(PassportKitNetworkError.internalError(reason: "No refresh token found."))
+        }
+    }
+    
+    
+    private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, completion: @escaping (Error?) -> Void) {
         Alamofire.request(api.url, method: api.method, parameters: api.parameters, encoding: api.encoding, headers: api.headers)
             .validate(statusCode:
                 PassportKitHTTPStatusCode.ok.rawValue..<PassportKitHTTPStatusCode.multipleChoices.rawValue)
@@ -56,7 +77,6 @@ class PassportKitAuthService {
                     manager.setRefreshToken(response.refreshToken)
                     completion(nil)
                 }
-                
         }
     }
     

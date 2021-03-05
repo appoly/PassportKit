@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
 
   spec.swift_versions = ["5.0", "5.1"]
   
-  spec.source_files = "Sources/*.swift"
+  spec.source_files = "Sources/**/*.swift", "Sources/*/*.swift"
   
 
 end

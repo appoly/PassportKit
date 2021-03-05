@@ -8,6 +8,7 @@
 
 
 import Foundation
+import LocalAuthentication
 
 
 
@@ -19,6 +20,17 @@ public typealias PassportKitRefreshResponse = (Error?) -> ()
 
 
 public class PassportKit: NSObject {
+    
+    // MARK: - Enums
+    
+    private enum RefreshResult {
+        case authorised
+        case unauthorised
+        case lockout
+        case cancelled
+    }
+    
+    
     
     // MARK: - Variables
     
@@ -72,8 +84,59 @@ public class PassportKit: NSObject {
     
     /// Refrshes the user's auth token using given configuration
     /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
-    public func refresh(biometricsEnabled: Bool, completion: PassportKitRefreshResponse) {
+    public func refresh(biometricsEnabled: Bool, reason: String? = nil, completion: @escaping PassportKitRefreshResponse) {
+        if(biometricsEnabled) {
+            biometricAuthentication { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                    case .authorised:
+                        self.authService.refresh(configuration: self.configuration, completion: { error in
+                            completion(error)
+                        })
+                    default:
+                        completion(PassportKitNetworkError.internalError(reason: "Biometric identification failed."))
+                }
+            }
+        } else {
+            
+        }
+    }
+    
+    
+    private func biometricAuthentication(reason: String? = nil, completion: @escaping (RefreshResult) -> Void) {
+        let context = LAContext()
+        var error: NSError?
         
+        let reasonString = reason ?? "Authentication is needed to access your account"
+        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reasonString) { (success, evalPolicyError) in
+                guard success, evalPolicyError == nil else {
+                    switch evalPolicyError!._code {
+                        case LAError.systemCancel.rawValue,
+                             LAError.userCancel.rawValue,
+                             LAError.userFallback.rawValue:
+                            completion(.cancelled)
+                            return
+                        case LAError.biometryLockout.rawValue:
+                            completion(.lockout)
+                            return
+                    default:
+                        return
+                    }
+                }
+                
+                completion(.authorised)
+            }
+        } else {
+            switch error!.code{
+                case Int(kLAErrorBiometryNotEnrolled):
+                    completion(.cancelled)
+                case LAError.passcodeNotSet.rawValue:
+                    completion(.cancelled)
+                default:
+                    completion(.cancelled)
+            }
+        }
     }
     
     
