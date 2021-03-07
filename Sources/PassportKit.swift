@@ -90,33 +90,27 @@ public class PassportKit: NSObject {
     /// Refrshes the user's auth token using given configuration
     /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
     public func refresh(biometricsEnabled: Bool, reason: String? = nil, completion: @escaping PassportKitRefreshResponse) {
-        if(biometricsEnabled) {
-            biometricAuthentication { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                    case .authorised:
-                        self.authService.refresh(configuration: self.configuration, completion: { error in
-                            completion(error)
-                        })
-                    default:
-                        completion(PassportKitNetworkError.internalError(reason: "Biometric identification failed."))
-                }
+        ownershipAuthentication(policy: biometricsEnabled ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+                case .authorised:
+                    self.authService.refresh(configuration: self.configuration, completion: { error in
+                        completion(error)
+                    })
+                default:
+                    completion(PassportKitNetworkError.internalError(reason: "Biometric identification failed."))
             }
-        } else {
-            self.authService.refresh(configuration: self.configuration, completion: { error in
-                completion(error)
-            })
         }
     }
     
     
-    private func biometricAuthentication(reason: String? = nil, completion: @escaping (RefreshResult) -> Void) {
+    private func ownershipAuthentication(policy: LAPolicy, reason: String? = nil, completion: @escaping (RefreshResult) -> Void) {
         let context = LAContext()
         var error: NSError?
         
         let reasonString = reason ?? "Authentication is needed to access your account"
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reasonString) { (success, evalPolicyError) in
+        if context.canEvaluatePolicy(policy, error: &error) {
+            context.evaluatePolicy(policy, localizedReason: reasonString) { (success, evalPolicyError) in
                 guard success, evalPolicyError == nil else {
                     switch evalPolicyError!._code {
                         case LAError.systemCancel.rawValue,
@@ -137,11 +131,15 @@ public class PassportKit: NSObject {
         } else {
             switch error!.code{
                 case Int(kLAErrorBiometryNotEnrolled):
-                    completion(.cancelled)
+                    ownershipAuthentication(policy: .deviceOwnerAuthentication, completion: completion)
                 case LAError.passcodeNotSet.rawValue:
-                    completion(.cancelled)
+                    completion(.authorised)
                 default:
-                    completion(.cancelled)
+                    if(policy == .deviceOwnerAuthenticationWithBiometrics) {
+                        ownershipAuthentication(policy: .deviceOwnerAuthentication, completion: completion)
+                    } else {
+                        completion(.unauthorised)
+                    }
             }
         }
     }
