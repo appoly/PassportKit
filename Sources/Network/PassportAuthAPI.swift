@@ -57,7 +57,7 @@ enum PassportAuthAPI {
     }
     
     var encoding: ParameterEncoding {
-        return URLEncoding.methodDependent
+        return URLEncoding.default
     }
     
 }

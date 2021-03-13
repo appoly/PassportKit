@@ -7,7 +7,7 @@ import PackageDescription
 
 let package = Package(
     name: "PassportKit",
-    platforms: [.iOS(.v11)],
+    platforms: [.iOS(.v12)],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
@@ -15,7 +15,7 @@ let package = Package(
             targets: ["PassportKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "4.9.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.3"),
         .package(url: "https://github.com/square/Valet.git", from: "3.2.0")
     ],
     targets: [

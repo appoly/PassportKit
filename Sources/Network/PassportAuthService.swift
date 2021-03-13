@@ -48,7 +48,7 @@ class PassportKitAuthService {
     
     
     private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, completion: @escaping (Error?) -> Void) {
-        Alamofire.request(api.url, method: api.method, parameters: api.parameters, encoding: api.encoding, headers: api.headers)
+        Session.default.request(api.url, method: api.method, parameters: api.parameters, encoding: api.encoding, headers: api.headers)
             .validate(statusCode:
                 PassportKitHTTPStatusCode.ok.rawValue..<PassportKitHTTPStatusCode.multipleChoices.rawValue)
             .responseJSON { (response) in
@@ -89,7 +89,7 @@ class PassportKitAuthService {
     }
     
     
-    private func error(from response: DataResponse<Any>) -> PassportKitNetworkError? {
+    private func error(from response: DataResponse<Any, Error>) -> PassportKitNetworkError? {
         return nil
     }
     
