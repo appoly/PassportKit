@@ -19,7 +19,7 @@ First start by creating a PassportConfiguration, this will give the request all 
 ```
 func setupPassport() {
     guard let baseURL = URL(string: "https://google.com") else { return nil }
-    let configuration = PassportConfiguration(baseURL: baseURL, clientID: "1", clientSecret: "awdoncoin12onaoinaoinda9", keychainID: "PassportTest")
+    let configuration = PassportConfiguration(baseURL: baseURL, mode: .standard(clientID: "1", clientSecret: "awdoncoin12onaoinaoinda9"), keychainID: "PassportTest")
     PassportKit.shared.setup(configuration)
 }
 ```
@@ -49,3 +49,16 @@ PassportKit.shared.authenticate(model) { error in
 ```
 
 As you can see in the success function above, PassportKit comes with an PassportKitAuthenticationManager class which uses keychain to store your authentication token securely using the keychain ID you set at the beginning in the PassportConfiguration.
+
+**Laravel Sanctum Support**
+
+PassportKit now supports Laravel Sanctum, use passport kit exactly the same, but when setting up, use the sanctum mode (this will no longer require a client id or secret).
+```
+func setupPassport() {
+    guard let baseURL = URL(string: "https://google.com") else { return nil }
+    let configuration = PassportConfiguration(baseURL: baseURL, mode: .sanctume, keychainID: "PassportTest")
+    PassportKit.shared.setup(configuration)
+}
+```
+
+Note that the refresh function and the refresh token found in the `AuthenticationManager` class are no longer available when using PassportKit in sactum mode.
