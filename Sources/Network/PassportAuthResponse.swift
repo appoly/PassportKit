@@ -24,6 +24,10 @@ internal class PassportAuthResponse: NSObject, Decodable {
     
     // MARK: - Coding Keys
     
+//    private enum ParentCodingKeys: String, CodingKey {
+//        case data
+//    }
+    
     private enum CodingKeys: String, CodingKey {
         case tokenType = "token_type"
         case expiresIn = "expires_in"
@@ -35,6 +39,7 @@ internal class PassportAuthResponse: NSObject, Decodable {
     // MARK: - Initializers
     
     internal required init(from decoder: Decoder) throws {
+//        let parentContainer = try decoder.container(keyedBy: ParentCodingKeys.self)
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         tokenType = try container.decodeIfPresent(String.self, forKey: .tokenType)

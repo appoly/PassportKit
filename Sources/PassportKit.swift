@@ -89,7 +89,10 @@ public class PassportKit: NSObject {
     
     /// Refrshes the user's auth token using given configuration
     /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
-    public func refresh(biometricsEnabled: Bool, reason: String? = nil, completion: @escaping PassportKitRefreshResponse) {
+    public func refresh(biometricsEnabled: Bool, reason: String? = nil, completion: @escaping PassportKitRefreshResponse) throws {
+        guard case .standard = configuration.mode else {
+            throw PassportKitNetworkError.notAvailableInSactum
+        }
         ownershipAuthentication(policy: biometricsEnabled ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication) { [weak self] result in
             guard let self = self else { return }
             switch result {

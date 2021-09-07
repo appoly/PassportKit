@@ -20,26 +20,42 @@ enum PassportAuthAPI {
     var url: URL {
         switch self {
             case .login(let configuration, _), .refresh(let configuration, _):
-                return configuration.baseURL.appendingPathComponent("/oauth/token")
+                if case .standard = configuration.mode {
+                    return configuration.baseURL.appendingPathComponent("/oauth/token")
+                } else {
+                    return configuration.baseURL.appendingPathComponent("/api/login")
+                }
         }
     }
     
     var parameters: Parameters? {
         switch self {
             case .login(let configuration, let model):
-                return [
-                    "username" : model.email!,
-                    "password" : model.password!,
-                    "client_id" : configuration.clientID,
-                    "client_secret" : configuration.clientSecret,
-                    "grant_type" : "password"
-                ]
+                switch configuration.mode {
+                    case .sanctum:
+                        return [
+                            "email": model.email!,
+                            "password": model.password!
+                        ]
+                    case .standard(let clientID, let clientSecret):
+                        return [
+                            "username" : model.email!,
+                            "password" : model.password!,
+                            "client_id" : clientID,
+                            "client_secret" : clientSecret,
+                            "grant_type" : "password"
+                        ]
+                }
         case .refresh(let configuration, let token):
+            guard case .standard(let clientID, let clientSecret) = configuration.mode else {
+                return nil
+            }
+            
             return [
                 "grant_type": "refresh_token",
                 "refresh_token": token,
-                "client_id": configuration.clientID,
-                "client_secret": configuration.clientSecret,
+                "client_id": clientID,
+                "client_secret": clientSecret,
                 "scope": ""
             ]
         }

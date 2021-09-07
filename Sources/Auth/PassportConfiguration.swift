@@ -14,14 +14,24 @@ import Foundation
 public struct PassportConfiguration {
     
     let baseURL: URL
-    let clientID: String
-    let clientSecret: String
+    let mode: Mode
     let keychainID: String
     
-    public init(baseURL: URL, clientID: String, clientSecret: String, keychainID: String) {
+    public init(baseURL: URL, mode: Mode, keychainID: String) {
         self.baseURL = baseURL
-        self.clientID = clientID
-        self.clientSecret = clientSecret
+        self.mode = mode
         self.keychainID = keychainID
     }
+    
+}
+
+
+
+extension PassportConfiguration {
+    
+    public enum Mode {
+        case standard(clientID: String, clientSecret: String)
+        case sanctum
+    }
+    
 }

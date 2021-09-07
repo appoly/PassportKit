@@ -51,7 +51,7 @@ class PassportKitAuthService {
         Session.default.request(api.url, method: api.method, parameters: api.parameters, encoding: api.encoding, headers: api.headers)
             .validate(statusCode:
                 PassportKitHTTPStatusCode.ok.rawValue..<PassportKitHTTPStatusCode.multipleChoices.rawValue)
-            .responseJSON { (response) in
+            .responseData { (response) in
                 switch response.result {
                 case .failure(_):
                     switch response.response?.statusCode {
@@ -60,21 +60,28 @@ class PassportKitAuthService {
                     default:
                         completion(PassportKitNetworkError.unknown)
                     }
-                case .success(let value):
-                    guard let json = value as? [String: Any] else {
-                        completion(PassportKitNetworkError.invalidResponse)
-                        return
-                    }
-                    
-                    guard let data = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed),
-                        let response = try? JSONDecoder().decode(PassportAuthResponse.self, from: data) else {
-                            completion(PassportKitNetworkError.invalidResponse)
-                            return
-                    }
-                    
+                case .success(let data):
                     let manager = PassportKitAuthenticationManager(configuration.keychainID)
-                    manager.setAuthToken(response.accessToken)
-                    manager.setRefreshToken(response.refreshToken)
+                    
+                    switch configuration.mode {
+                        case .sanctum:
+                            guard let response = try? JSONDecoder().decode(SanctumAuthResponse.self, from: data) else {
+                                    completion(PassportKitNetworkError.invalidResponse)
+                                    return
+                            }
+                            
+                            manager.setAuthToken(response.token)
+                        case .standard:
+                            guard let response = try? JSONDecoder().decode(PassportAuthResponse.self, from: data) else {
+                                    completion(PassportKitNetworkError.invalidResponse)
+                                    return
+                            }
+                            
+                            manager.setAuthToken(response.accessToken)
+                            manager.setRefreshToken(response.refreshToken)
+                            
+                    }
+                    
                     completion(nil)
                 }
         }

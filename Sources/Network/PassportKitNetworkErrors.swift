@@ -25,6 +25,7 @@ enum PassportKitNetworkError: Error {
     case messageError(message: String)
     case invalidCredentials
     case invalidUserRole
+    case notAvailableInSactum
 }
 
 
@@ -57,6 +58,8 @@ extension PassportKitNetworkError: LocalizedError {
                 return NSLocalizedString(message, comment: "")
             case .invalidUserRole:
                 return NSLocalizedString("Your user role is not supported by the app.", comment: "")
+            case .notAvailableInSactum:
+                return NSLocalizedString("This functionality is not available when using sanctum", comment: "")
             default:
                 return NSLocalizedString("An unidentified error occurred.", comment: "")
         }
