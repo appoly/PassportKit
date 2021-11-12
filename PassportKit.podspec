@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "PassportKit"
-  spec.version      = "1.6.1"
+  spec.version      = "1.6.2"
   spec.license      = "MIT"
   spec.summary      = "Swift library used for quick and easy oauth authentication."
   spec.homepage     = "https://github.com/appoly/PassportKit"

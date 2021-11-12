@@ -8,7 +8,6 @@
 
 
 import Foundation
-import Alamofire
 
 
 
@@ -28,52 +27,35 @@ enum PassportAuthAPI {
         }
     }
     
-    var parameters: Parameters? {
+    var parameters: Data? {
         switch self {
             case .login(let configuration, let model):
                 switch configuration.mode {
                     case .sanctum:
-                        return [
-                            "email": model.email!,
-                            "password": model.password!
-                        ]
+                    return "username=\(model.email!)&password=\(model.password!)"
+                        .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
+                        .data(using: .utf8)
                     case .standard(let clientID, let clientSecret):
-                        return [
-                            "username" : model.email!,
-                            "password" : model.password!,
-                            "client_id" : clientID,
-                            "client_secret" : clientSecret,
-                            "grant_type" : "password"
-                        ]
+                        return "username=\(model.email!)&password=\(model.password!)&client_id=\(clientID)&client_secret=\(clientSecret)&grant_type=password"
+                        .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
+                        .data(using: .utf8)
                 }
-        case .refresh(let configuration, let token):
-            guard case .standard(let clientID, let clientSecret) = configuration.mode else {
-                return nil
-            }
+            case .refresh(let configuration, let token):
+                guard case .standard(let clientID, let clientSecret) = configuration.mode else {
+                    return nil
+                }
             
-            return [
-                "grant_type": "refresh_token",
-                "refresh_token": token,
-                "client_id": clientID,
-                "client_secret": clientSecret,
-                "scope": ""
-            ]
+                return "refresh_token=\(token)&client_id=\(clientID)&client_secret=\(clientSecret)&grant_type=refresh_token"
+                .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
+                .data(using: .utf8)
         }
     }
     
-    var method: HTTPMethod {
+    var method: String {
         switch self {
             case .login, .refresh:
-                return .post
+            return "POST"
         }
-    }
-    
-    var headers: HTTPHeaders? {
-        return nil
-    }
-    
-    var encoding: ParameterEncoding {
-        return URLEncoding.default
     }
     
 }
