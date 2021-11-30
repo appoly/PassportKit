@@ -107,6 +107,13 @@ public class PassportKit: NSObject {
     }
     
     
+    public func localAuthententication(biometricsEnabled: Bool, completion: @escaping (Bool) -> Void) {
+        ownershipAuthentication(policy: biometricsEnabled ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication) { [weak self] result in
+            completion(result == .authorised)
+        }
+    }
+    
+    
     private func ownershipAuthentication(policy: LAPolicy, reason: String? = nil, completion: @escaping (RefreshResult) -> Void) {
         let context = LAContext()
         var error: NSError?
