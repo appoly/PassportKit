@@ -10,11 +10,11 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 
 
 class PassportKitAuthService {
-    
     
     // MARK: - Network Calls
     
@@ -51,6 +51,7 @@ class PassportKitAuthService {
         var request = URLRequest(url: api.url)
         request.httpMethod = api.method
         request.httpBody = api.parameters
+        request.headers = PassportKitHeaders.defaultHeaders
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let response = response as? HTTPURLResponse else { completion(PassportKitNetworkError.invalidResponse); return }
             guard let data = data, error == nil else { completion(error); return }
@@ -89,44 +90,6 @@ class PassportKitAuthService {
         }
         task.resume()
     }
-//        AF.request(api.url, method: api.method, parameters: api.parameters, encoding: api.encoding, headers: api.headers)
-//            .validate(statusCode:
-//                PassportKitHTTPStatusCode.ok.rawValue..<PassportKitHTTPStatusCode.multipleChoices.rawValue)
-//            .responseData { (response) in
-//                switch response.result {
-//                case .failure(_):
-//                    switch response.response?.statusCode {
-//                    case 400:
-//                        completion(PassportKitNetworkError.messageError(message: NSLocalizedString("Email address or password was incorrect, please try again.", comment: "")))
-//                    default:
-//                        completion(PassportKitNetworkError.unknown)
-//                    }
-//                case .success(let data):
-//                    let manager = PassportKitAuthenticationManager(configuration.keychainID)
-//
-//                    switch configuration.mode {
-//                        case .sanctum:
-//                            guard let response = try? JSONDecoder().decode(SanctumAuthResponse.self, from: data) else {
-//                                    completion(PassportKitNetworkError.invalidResponse)
-//                                    return
-//                            }
-//
-//                            manager.setAuthToken(response.token)
-//                        case .standard:
-//                            guard let response = try? JSONDecoder().decode(PassportAuthResponse.self, from: data) else {
-//                                    completion(PassportKitNetworkError.invalidResponse)
-//                                    return
-//                            }
-//
-//                            manager.setAuthToken(response.accessToken)
-//                            manager.setRefreshToken(response.refreshToken)
-//
-//                    }
-//
-//                    completion(nil)
-//                }
-//        }
-//    }
     
     
     
@@ -135,10 +98,5 @@ class PassportKitAuthService {
     private func isNetworkAvailable() -> Bool {
         return NetworkReachabilityManager()!.isReachable
     }
-    
-    
-//    private func error(from response: DataResponse<Any, Error>) -> PassportKitNetworkError? {
-//        return nil
-//    }
     
 }

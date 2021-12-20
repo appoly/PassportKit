@@ -32,21 +32,29 @@ enum PassportAuthAPI {
             case .login(let configuration, let model):
                 switch configuration.mode {
                     case .sanctum:
-                    return "username=\(model.email!)&password=\(model.password!)"
-                        .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
+                        let username = model.email!.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        let password = model.password!.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        return "username=\(username)&password=\(password)"
                         .data(using: .utf8)
                     case .standard(let clientID, let clientSecret):
-                        return "username=\(model.email!)&password=\(model.password!)&client_id=\(clientID)&client_secret=\(clientSecret)&grant_type=password"
-                        .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
-                        .data(using: .utf8)
+                        let username = model.email!.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        let password = model.password!.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        let clientID = clientID.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        let clientSecret = clientSecret.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                        return "username=\(username)&password=\(password)&client_id=\(clientID)&client_secret=\(clientSecret)&grant_type=password"
+                            .data(using: .utf8)
                 }
             case .refresh(let configuration, let token):
-                guard case .standard(let clientID, let clientSecret) = configuration.mode else {
+                guard case .standard(var clientID, var clientSecret) = configuration.mode else {
                     return nil
                 }
             
+                clientID = clientID.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                clientSecret = clientSecret.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+                let token = token.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed) ?? ""
+            
                 return "refresh_token=\(token)&client_id=\(clientID)&client_secret=\(clientSecret)&grant_type=refresh_token"
-                .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)?
+                .addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?
                 .data(using: .utf8)
         }
     }
