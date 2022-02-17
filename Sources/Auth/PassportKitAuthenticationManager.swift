@@ -14,6 +14,12 @@ import Valet
 
 
 
+extension Notification.Name {
+    public static let passportKitAuthenticationStateChanged: Notification.Name = .init(rawValue: "PassportKitAuthenticationStateChanged")
+}
+
+
+
 class PassportKitAuthenticationManager: NSObject {
     
     // MARK: - Backend Variables
@@ -58,6 +64,7 @@ class PassportKitAuthenticationManager: NSObject {
         } else {
             valet.removeObject(forKey: authTokenKey)
         }
+        NotificationCenter.default.post(name: .passportKitAuthenticationStateChanged, object: nil)
     }
     
     

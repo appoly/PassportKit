@@ -8,7 +8,6 @@
 
 
 import Foundation
-import Alamofire
 
 
 
@@ -29,7 +28,7 @@ fileprivate extension Bundle {
 }
 
 
-
+typealias HTTPHeader = (name: String, value: String)
 class PassportKitHeaders {
     
     private static var userAgent: HTTPHeader = {
@@ -90,8 +89,8 @@ class PassportKitHeaders {
         return HTTPHeader(name: "Accept-Language", value: "en;q=1.0")
     }()
     
-    public static var defaultHeaders: HTTPHeaders = {
-        return HTTPHeaders([acceptLanguage, accept, contentType, acceptEncoding, userAgent])
+    public static var defaultHeaders: [HTTPHeader] = {
+        return [acceptLanguage, accept, contentType, acceptEncoding, userAgent]
     }()
     
 }

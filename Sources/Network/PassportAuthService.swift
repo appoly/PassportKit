@@ -9,8 +9,8 @@
 
 
 import Foundation
-import Alamofire
 import UIKit
+import SystemConfiguration
 
 
 
@@ -51,7 +51,11 @@ class PassportKitAuthService {
         var request = URLRequest(url: api.url)
         request.httpMethod = api.method
         request.httpBody = api.parameters
-        request.headers = PassportKitHeaders.defaultHeaders
+        request.allHTTPHeaderFields = PassportKitHeaders.defaultHeaders.reduce([String: String](), {
+            var newValue = $0
+            newValue[$1.name] = $1.value
+            return newValue
+        })
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let response = response as? HTTPURLResponse else { completion(PassportKitNetworkError.invalidResponse); return }
             guard let data = data, error == nil else { completion(error); return }
@@ -96,7 +100,25 @@ class PassportKitAuthService {
     // MARK: - Utilities
     
     private func isNetworkAvailable() -> Bool {
-        return NetworkReachabilityManager()!.isReachable
+        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+
+        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
+        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+             return false
+        }
+
+        let isReachable = flags == .reachable
+        let needsConnection = flags == .connectionRequired
+
+        return isReachable && !needsConnection
     }
     
 }

@@ -19,7 +19,7 @@ public typealias PassportKitRefreshResponse = (Error?) -> ()
 
 
 
-public class PassportKit: NSObject {
+public class PassportKit: NSObject, ObservableObject {
     
     // MARK: - Enums
     
@@ -46,9 +46,7 @@ public class PassportKit: NSObject {
         }
     }
 
-    public var isAuthenticated: Bool {
-        return authManager.isAuthenticated
-    }
+    @Published public var isAuthenticated: Bool = false
     
     public var authToken: String? {
         return authManager.authToken
@@ -61,6 +59,11 @@ public class PassportKit: NSObject {
     public func setup(_ configuration: PassportConfiguration) {
         self.configuration = configuration
         self.authManager = PassportKitAuthenticationManager(configuration.keychainID)
+        self.isAuthenticated = self.authManager.isAuthenticated
+        NotificationCenter.default.addObserver(forName: .passportKitAuthenticationStateChanged, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.isAuthenticated = self.authManager.isAuthenticated
+        }
     }
     
     
