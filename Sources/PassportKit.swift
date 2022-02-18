@@ -9,6 +9,7 @@
 
 import Foundation
 import LocalAuthentication
+import SwiftUI
 
 
 
@@ -59,10 +60,15 @@ public class PassportKit: NSObject, ObservableObject {
     public func setup(_ configuration: PassportConfiguration) {
         self.configuration = configuration
         self.authManager = PassportKitAuthenticationManager(configuration.keychainID)
-        self.isAuthenticated = self.authManager.isAuthenticated
-        NotificationCenter.default.addObserver(forName: .passportKitAuthenticationStateChanged, object: nil, queue: .main) { [weak self] _ in
+        withAnimation { [weak self] in
             guard let self = self else { return }
             self.isAuthenticated = self.authManager.isAuthenticated
+        }
+        NotificationCenter.default.addObserver(forName: .passportKitAuthenticationStateChanged, object: nil, queue: .main) { _ in
+            withAnimation { [weak self] in
+                guard let self = self else { return }
+                self.isAuthenticated = self.authManager.isAuthenticated
+            }
         }
     }
     

@@ -10,15 +10,16 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 
 
-public class PassportViewModel: NSObject {
+open class PassportViewModel: NSObject, ObservableObject {
     
     // MARK: - Variables
     
-    private(set) var email: String?
-    private(set) var password: String?
+    @Published public var email: String = ""
+    @Published public var password: String = ""
     private let passwordRegex: String?
     private let authController = PassportKitAuthService()
     
@@ -37,22 +38,12 @@ public class PassportViewModel: NSObject {
     // MARK: - Setters
     
     @objc public func setPassword(_ sender: UITextField) {
-        password = sender.text
+        password = sender.text ?? ""
     }
     
     
     @objc public func setEmail(_ sender: UITextField) {
-        email = sender.text
-    }
-    
-    
-    public func setPassword(string: String) {
-        password = string
-    }
-    
-    
-    public func setEmail(string: String) {
-        email = string
+        email = sender.text ?? ""
     }
     
     
@@ -61,8 +52,8 @@ public class PassportViewModel: NSObject {
     
     public func validateForLogin(completion: @escaping PassportKitValidationResponse) {
         
-        let email = self.email ?? ""
-        let password = self.password ?? ""
+        let email = self.email
+        let password = self.password
         
         guard !email.isEmpty else {
             DispatchQueue.main.async { completion(PassportKitValidationError.missingEmail) }
