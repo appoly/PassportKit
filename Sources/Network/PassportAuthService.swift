@@ -115,8 +115,8 @@ class PassportKitAuthService {
              return false
         }
 
-        let isReachable = flags == .reachable
-        let needsConnection = flags == .connectionRequired
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
 
         return isReachable && !needsConnection
     }
