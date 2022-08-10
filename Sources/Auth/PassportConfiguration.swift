@@ -15,11 +15,15 @@ public struct PassportConfiguration {
     
     let baseURL: URL
     let mode: Mode
+    let emailKey: String
     let keychainID: String
     
-    public init(baseURL: URL, mode: Mode, keychainID: String) {
+    
+    /// Initializes a new instance of a passport configuration, emailKey defaults to `username`
+    public init(emailKey: String = "username", baseURL: URL, mode: Mode, keychainID: String) {
         self.baseURL = baseURL
         self.mode = mode
+        self.emailKey = emailKey
         self.keychainID = keychainID
     }
     
