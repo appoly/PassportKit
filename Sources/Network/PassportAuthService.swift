@@ -18,7 +18,7 @@ class PassportKitAuthService {
     
     // MARK: - Network Calls
     
-    public func login(configuration: PassportConfiguration, model: PassportViewModel, completion: @escaping PassportKitAuthenticationResponse) -> Void {
+    public func login(configuration: PassportConfiguration, model: PassportViewModel, additionalHeaders: [String: String]?, completion: @escaping PassportKitAuthenticationResponse) -> Void {
         
         guard isNetworkAvailable() else {
             completion(PassportKitNetworkError.noConnection)
@@ -26,11 +26,11 @@ class PassportKitAuthService {
         }
         
         let api: PassportAuthAPI = .login(configuration: configuration, model: model)
-        authRequest(configuration: configuration, api: api, completion: completion)
+        authRequest(configuration: configuration, api: api, additionalHeaders: additionalHeaders, completion: completion)
     }
     
     
-    public func refresh(configuration: PassportConfiguration, completion: @escaping PassportKitRefreshResponse) {
+    public func refresh(configuration: PassportConfiguration, additionalHeaders: [String: String]?, completion: @escaping PassportKitRefreshResponse) {
         
         guard isNetworkAvailable() else {
             completion(PassportKitNetworkError.noConnection)
@@ -40,14 +40,14 @@ class PassportKitAuthService {
         let manager = PassportKitAuthenticationManager(configuration.keychainID)
         if let refreshToken = manager.refreshToken {
             let api: PassportAuthAPI = .refresh(configuration: configuration, token: refreshToken)
-            authRequest(configuration: configuration, api: api, completion: completion)
+            authRequest(configuration: configuration, api: api, additionalHeaders: additionalHeaders, completion: completion)
         } else {
             completion(PassportKitNetworkError.internalError(reason: "No refresh token found."))
         }
     }
     
     
-    private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, completion: @escaping (Error?) -> Void) {
+    private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, additionalHeaders: [String: String]?, completion: @escaping (Error?) -> Void) {
         var request = URLRequest(url: api.url)
         request.httpMethod = api.method
         request.httpBody = api.parameters
@@ -56,6 +56,7 @@ class PassportKitAuthService {
             newValue[$1.name] = $1.value
             return newValue
         })
+        additionalHeaders?.forEach { request.addValue($0.value, forHTTPHeaderField: $0.key) }
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let response = response as? HTTPURLResponse else { completion(PassportKitNetworkError.invalidResponse); return }
             guard let data = data, error == nil else { completion(error); return }

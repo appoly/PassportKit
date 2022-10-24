@@ -78,7 +78,7 @@ public class PassportKit: NSObject, ObservableObject {
     
     /// Uses the given configuration to get a users authentication token and store it in the keychain
     /// - Parameter viewModel: View model consisting of a email and a password
-    public func authenticate(_ viewModel: PassportViewModel, completion: PassportKitAuthenticationResponse?) {
+    public func authenticate(_ viewModel: PassportViewModel, completion: PassportKitAuthenticationResponse?, additionalHeaders: [String: String]? = nil) {
         viewModel.validateForLogin { [weak self] error in
             guard let self = self else { return }
             guard error == nil else {
@@ -86,7 +86,7 @@ public class PassportKit: NSObject, ObservableObject {
                 return
             }
             
-            self.authService.login(configuration: self.configuration, model: viewModel) { error in
+            self.authService.login(configuration: self.configuration, model: viewModel, additionalHeaders: additionalHeaders) { error in
                 if(error == nil) {
                     DispatchQueue.main.async { completion?(nil) }
                 } else {
@@ -98,7 +98,7 @@ public class PassportKit: NSObject, ObservableObject {
     
     /// Refrshes the user's auth token using given configuration
     /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
-    public func refresh(biometricsEnabled: Bool, reason: String? = nil, completion: @escaping PassportKitRefreshResponse) throws {
+    public func refresh(biometricsEnabled: Bool, reason: String? = nil, additionalHeaders: [String: String]? = nil, completion: @escaping PassportKitRefreshResponse) throws {
         guard case .standard = configuration.mode else {
             throw PassportKitNetworkError.notAvailableInSactum
         }
@@ -106,7 +106,7 @@ public class PassportKit: NSObject, ObservableObject {
             guard let self = self else { return }
             switch result {
                 case .authorised:
-                    self.authService.refresh(configuration: self.configuration, completion: { error in
+                self.authService.refresh(configuration: self.configuration, additionalHeaders: additionalHeaders, completion: { error in
                         completion(error)
                     })
                 default:
