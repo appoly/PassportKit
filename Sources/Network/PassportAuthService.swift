@@ -18,7 +18,7 @@ class PassportKitAuthService {
     
     // MARK: - Network Calls
     
-    public func login(configuration: PassportConfiguration, model: PassportViewModel, additionalHeaders: [String: String]?, completion: @escaping PassportKitAuthenticationResponse) -> Void {
+    public func login(configuration: PassportConfiguration, model: PassportViewModel, persistToken: Bool = true, additionalHeaders: [String: String]?, completion: @escaping PassportKitAuthenticationResponse) -> Void {
         
         guard isNetworkAvailable() else {
             completion(PassportKitNetworkError.noConnection)
@@ -26,7 +26,7 @@ class PassportKitAuthService {
         }
         
         let api: PassportAuthAPI = .login(configuration: configuration, model: model)
-        authRequest(configuration: configuration, api: api, additionalHeaders: additionalHeaders, completion: completion)
+        authRequest(configuration: configuration, api: api, additionalHeaders: additionalHeaders, persistToken: persistToken, completion: completion)
     }
     
     
@@ -47,7 +47,7 @@ class PassportKitAuthService {
     }
     
     
-    private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, additionalHeaders: [String: String]?, completion: @escaping (Error?) -> Void) {
+    private func authRequest(configuration: PassportConfiguration, api: PassportAuthAPI, additionalHeaders: [String: String]?, persistToken: Bool = true, completion: @escaping (Error?) -> Void) {
         var request = URLRequest(url: api.url)
         request.httpMethod = api.method
         request.httpBody = api.parameters
@@ -79,16 +79,19 @@ class PassportKitAuthService {
                             return
                     }
 
-                    manager.setAuthToken(response.token)
+                    if(persistToken) {
+                        manager.setAuthToken(response.token)
+                    }
                 case .standard:
                     guard let response = try? JSONDecoder().decode(PassportAuthResponse.self, from: data) else {
                             completion(PassportKitNetworkError.invalidResponse)
                             return
                     }
 
-                    manager.setAuthToken(response.accessToken)
-                    manager.setRefreshToken(response.refreshToken)
-
+                    if(persistToken) {
+                        manager.setAuthToken(response.accessToken)
+                        manager.setRefreshToken(response.refreshToken)
+                    }
             }
 
             completion(nil)

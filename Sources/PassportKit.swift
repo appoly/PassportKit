@@ -96,6 +96,26 @@ public class PassportKit: NSObject, ObservableObject {
         }
     }
     
+    
+    /// Validate Password without changing auth token
+    /// - Parameters:
+    ///   - viewModel: View model consisting of a email and a password
+    ///   - completion: Code that is to be run upon completiong (optional)
+    ///   - additionalheaders: Additional headers to attach to the request (optional)
+    public func validatePassword(_ viewModel: PassportViewModel, completion: @escaping (Result<Void, Error>) -> Void, additionalheaders: [String: String]? = nil) {
+        viewModel.validateForLogin { [weak self] error in
+            guard let self = self else { return }
+            guard error == nil else {
+                DispatchQueue.main.async { completion(.failure(error!)) }
+                return
+            }
+            
+            self.authService.login(configuration: self.configuration, model: viewModel, persistToken: false, additionalHeaders: additionalheaders) { error in
+                DispatchQueue.main.async { completion(error == nil ? .success(()) : .failure(error!)) }
+            }
+        }
+    }
+    
     /// Refrshes the user's auth token using given configuration
     /// - Parameter biometricsEnabled: Will trigger a biometric popup prior to refresh
     public func refresh(biometricsEnabled: Bool, reason: String? = nil, additionalHeaders: [String: String]? = nil, completion: @escaping PassportKitRefreshResponse) throws {
