@@ -62,7 +62,7 @@ class PassportKitAuthService {
             guard let data = data, error == nil else { completion(error); return }
             guard (PassportKitHTTPStatusCode.ok.rawValue..<PassportKitHTTPStatusCode.multipleChoices.rawValue).contains(response.statusCode) else {
                 switch response.statusCode {
-                    case 400, 401:
+                    case 400, 401, 422:
                         completion(PassportKitNetworkError.messageError(message: NSLocalizedString("Email address or password was incorrect, please try again.", comment: "")))
                     default:
                         completion(PassportKitNetworkError.unknown)
