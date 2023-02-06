@@ -27,11 +27,7 @@ enum PassportAuthAPI {
     var url: URL {
         switch self {
             case .login(let configuration, _), .refresh(let configuration, _):
-                if case .standard = configuration.mode {
-                    return configuration.baseURL.appendingPathComponent("/oauth/token")
-                } else {
-                    return configuration.baseURL.appendingPathComponent("/api/login")
-                }
+                return configuration.url
         }
     }
     
