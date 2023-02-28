@@ -54,31 +54,18 @@ open class PassportViewModel: NSObject, ObservableObject {
         
         let email = self.email
         let password = self.password
+        var errors = [PassportKitValidationError]()
         
-        guard !email.isEmpty else {
-            DispatchQueue.main.async { completion(PassportKitValidationError.missingEmail) }
-            return
-        }
-        
-        guard email.isValidEmail else {
-            DispatchQueue.main.async { completion(PassportKitValidationError.invalidEmail) }
-            return
-        }
-        
-        guard !password.isEmpty else {
-            DispatchQueue.main.async { completion(PassportKitValidationError.missingPassword) }
-            return
-        }
+        if(email.isEmpty) { errors.append(.missingEmail) }
+        if(!email.isValidEmail) { errors.append(.invalidEmail) }
+        if(password.isEmpty) { errors.append(.missingPassword) }
         
         if let passwordRegex = passwordRegex {
             let passwordPredicate = NSPredicate(format:"SELF MATCHES %@", passwordRegex)
-            guard passwordPredicate.evaluate(with: password) else {
-                completion(PassportKitValidationError.invalidPassword)
-                return
-            }
+            if(!passwordPredicate.evaluate(with: password)) { errors.append(.invalidPassword) }
         }
         
-        DispatchQueue.main.async { completion(nil) }
+        DispatchQueue.main.async { completion(errors) }
     }
     
 }

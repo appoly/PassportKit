@@ -14,7 +14,7 @@ import SwiftUI
 
 
 
-public typealias PassportKitValidationResponse = (Error?) -> Void
+public typealias PassportKitValidationResponse = ([PassportKitValidationError]) -> Void
 public typealias PassportKitAuthenticationResponse = (Error?) -> ()
 public typealias PassportKitRefreshResponse = (Error?) -> ()
 
@@ -79,10 +79,10 @@ public class PassportKit: NSObject, ObservableObject {
     /// Uses the given configuration to get a users authentication token and store it in the keychain
     /// - Parameter viewModel: View model consisting of a email and a password
     public func authenticate(_ viewModel: PassportViewModel, completion: PassportKitAuthenticationResponse?, additionalHeaders: [String: String]? = nil) {
-        viewModel.validateForLogin { [weak self] error in
+        viewModel.validateForLogin { [weak self] errors in
             guard let self = self else { return }
-            guard error == nil else {
-                DispatchQueue.main.async { completion?(error!) }
+            guard errors.isEmpty else {
+                DispatchQueue.main.async { completion?(errors.first!) }
                 return
             }
             
@@ -103,10 +103,10 @@ public class PassportKit: NSObject, ObservableObject {
     ///   - completion: Code that is to be run upon completiong (optional)
     ///   - additionalheaders: Additional headers to attach to the request (optional)
     public func validatePassword(_ viewModel: PassportViewModel, completion: @escaping (Result<Void, Error>) -> Void, additionalheaders: [String: String]? = nil) {
-        viewModel.validateForLogin { [weak self] error in
+        viewModel.validateForLogin { [weak self] errors in
             guard let self = self else { return }
-            guard error == nil else {
-                DispatchQueue.main.async { completion(.failure(error!)) }
+            guard errors.isEmpty else {
+                DispatchQueue.main.async { completion(.failure(errors.first!)) }
                 return
             }
             
