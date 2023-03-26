@@ -35,7 +35,7 @@ extension PassportConfiguration {
     
     public enum Mode {
         case standard(clientID: String, clientSecret: String)
-        case sanctum
+        case sanctum(basic: Bool)
     }
     
 }

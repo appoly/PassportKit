@@ -35,10 +35,10 @@ enum PassportAuthAPI {
         switch self {
             case .login(let configuration, let model):
                 switch configuration.mode {
-                    case .sanctum:
+                    case .sanctum(let basic):
                         let username = model.email.addingPercentEncoding(withAllowedCharacters: Self.allowedCharacters) ?? ""
-                    let password = model.password.addingPercentEncoding(withAllowedCharacters: Self.allowedCharacters) ?? ""
-                    return "\(configuration.emailKey)=\(username)&password=\(password)"
+                        let password = model.password.addingPercentEncoding(withAllowedCharacters: Self.allowedCharacters) ?? ""
+                        return basic ? nil : "\(configuration.emailKey)=\(username)&password=\(password)"
                         .data(using: .utf8)
                     case .standard(let clientID, let clientSecret):
                         let username = model.email.addingPercentEncoding(withAllowedCharacters: Self.allowedCharacters) ?? ""

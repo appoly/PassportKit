@@ -26,7 +26,14 @@ class PassportKitAuthService {
         }
         
         let api: PassportAuthAPI = .login(configuration: configuration, model: model)
-        authRequest(configuration: configuration, api: api, additionalHeaders: additionalHeaders, persistToken: persistToken, completion: completion)
+        var headers = additionalHeaders ?? [:]
+        if case .sanctum(let basic) = configuration.mode, basic {
+            let basic = String(format:"%@:%@", model.email, model.password)
+                .data(using: .utf8)!
+                .base64EncodedString()
+            headers["Authorization"] = "Basic \(basic)"
+        }
+        authRequest(configuration: configuration, api: api, additionalHeaders: headers, persistToken: persistToken, completion: completion)
     }
     
     
