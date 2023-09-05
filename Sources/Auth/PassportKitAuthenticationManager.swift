@@ -34,14 +34,14 @@ class PassportKitAuthenticationManager: NSObject {
 
     
     public var authToken: String? {
-        let valet = Valet.valet(with: identifier, accessibility: .alwaysThisDeviceOnly)
-        return valet.string(forKey: authTokenKey)
+        let valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
+        return try? valet.string(forKey: authTokenKey)
     }
     
     
     public var refreshToken: String? {
-        let valet = Valet.valet(with: identifier, accessibility: .alwaysThisDeviceOnly)
-        return valet.string(forKey: refreshTokenKey)
+        let valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
+        return try? valet.string(forKey: refreshTokenKey)
     }
     
     
@@ -57,23 +57,23 @@ class PassportKitAuthenticationManager: NSObject {
     
     // MARK: - CRUD
     
-    public func setAuthToken(_ authToken: String?) {
-        let valet = Valet.valet(with: identifier, accessibility: .alwaysThisDeviceOnly)
+    public func setAuthToken(_ authToken: String?) throws {
+        let valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
         if let authToken = authToken {
-            valet.set(string: authToken, forKey: authTokenKey)
+            try valet.setString(authToken, forKey: authTokenKey)
         } else {
-            valet.removeObject(forKey: authTokenKey)
+            try valet.removeObject(forKey: authTokenKey)
         }
         NotificationCenter.default.post(name: .passportKitAuthenticationStateChanged, object: nil)
     }
     
     
-    public func setRefreshToken(_ refreshToken: String?) {
-        let valet = Valet.valet(with: identifier, accessibility: .alwaysThisDeviceOnly)
+    public func setRefreshToken(_ refreshToken: String?) throws {
+        let valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
         if let refreshToken = refreshToken {
-            valet.set(string: refreshToken, forKey: refreshTokenKey)
+            try valet.setString(refreshToken, forKey: refreshTokenKey)
         } else {
-            valet.removeObject(forKey: refreshTokenKey)
+            try valet.removeObject(forKey: refreshTokenKey)
         }
     }
 }

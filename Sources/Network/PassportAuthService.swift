@@ -78,27 +78,30 @@ class PassportKitAuthService {
             }
                                                                                                                         
             let manager = PassportKitAuthenticationManager(configuration.keychainID)
-
-            switch configuration.mode {
+            do {
+                switch configuration.mode {
                 case .sanctum:
                     guard let response = try? JSONDecoder().decode(SanctumAuthResponse.self, from: data) else {
-                            completion(PassportKitNetworkError.invalidResponse)
-                            return
+                        completion(PassportKitNetworkError.invalidResponse)
+                        return
                     }
-
+                    
                     if(persistToken) {
-                        manager.setAuthToken(response.token)
+                        try manager.setAuthToken(response.token)
                     }
                 case .standard:
                     guard let response = try? JSONDecoder().decode(PassportAuthResponse.self, from: data) else {
-                            completion(PassportKitNetworkError.invalidResponse)
-                            return
+                        completion(PassportKitNetworkError.invalidResponse)
+                        return
                     }
-
+                    
                     if(persistToken) {
-                        manager.setAuthToken(response.accessToken)
-                        manager.setRefreshToken(response.refreshToken)
+                        try manager.setAuthToken(response.accessToken)
+                        try manager.setRefreshToken(response.refreshToken)
                     }
+                }
+            } catch {
+                completion(error)
             }
 
             completion(nil)

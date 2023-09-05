@@ -185,14 +185,14 @@ public class PassportKit: NSObject, ObservableObject {
     
     
     /// Manually sets auth token
-    public func setAuthToken(token: String) {
-        PassportKitAuthenticationManager(configuration.keychainID).setAuthToken(token)
+    public func setAuthToken(token: String) throws {
+        try PassportKitAuthenticationManager(configuration.keychainID).setAuthToken(token)
     }
 
     
     /// Removes the users auth token from the keychain
-    public func unauthenticate() {
-        authManager.setAuthToken(nil)
+    public func unauthenticate() throws {
+        try authManager.setAuthToken(nil)
     }
     
 }
