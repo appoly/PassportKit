@@ -56,15 +56,24 @@ public class PassportKit: NSObject, ObservableObject {
     
     
     // MARK: - Setup
-    
-    public func setup(_ configuration: PassportConfiguration) {
+    public func setup(_ configuration: PassportConfiguration, freshInstall: Bool = false) {
         self.configuration = configuration
         self.authManager = PassportKitAuthenticationManager(configuration.keychainID)
-        withAnimation { [weak self] in
-            guard let self = self else { return }
-            self.isAuthenticated = self.authManager.isAuthenticated
-        }
+        
         NotificationCenter.default.addObserver(forName: .passportKitAuthenticationStateChanged, object: nil, queue: .main) { _ in
+            withAnimation { [weak self] in
+                guard let self = self else { return }
+                self.isAuthenticated = self.authManager.isAuthenticated
+            }
+        }
+        
+        if freshInstall {
+            do {
+                try unauthenticate()
+            } catch {
+                print("Error during unauthentication: \(error.localizedDescription)")
+            }
+        } else {
             withAnimation { [weak self] in
                 guard let self = self else { return }
                 self.isAuthenticated = self.authManager.isAuthenticated
